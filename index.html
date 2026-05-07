@@ -845,7 +845,7 @@ window.onGoogleLibraryLoad = () => {
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID, scope: SCOPES,
     callback: async (resp) => {
-      if (resp.error) { showToast('Google Login fehlgeschlagen ✗'); return; }
+      if (resp.error) { showToast('¡Error al conectar con Google! ✗'); return; }
       state.accessToken = resp.access_token;
       state.syncStatus = 'connected';
       showToast('¡Conectado! ✓ Cargando datos...'); render();
@@ -857,7 +857,7 @@ function googleSignIn() { if(!tokenClient){showToast('Google aún no cargado...'
 function googleSignOut() {
   if(state.accessToken) google.accounts.oauth2.revoke(state.accessToken);
   state.accessToken=null; state.driveFileId=null; state.syncStatus='disconnected';
-  showToast('Abgemeldet 👋'); render();
+  showToast('¡Sesión cerrada! 👋'); render();
 }
 async function syncFromDrive() {
   if(!state.accessToken) return;
@@ -888,7 +888,7 @@ async function syncToDrive() {
       state.driveFileId = metaData.id;
       await fetch(`https://www.googleapis.com/upload/drive/v3/files/${state.driveFileId}?uploadType=media`,{method:'PATCH',headers:{Authorization:`Bearer ${state.accessToken}`,'Content-Type':'application/json'},body});
     }
-  } catch(e) { showToast('Drive Error ✗'); }
+  } catch(e) { showToast('¡Error de Drive! ✗'); }
   state.syncStatus='connected'; render();
 }
 function mergeData(local, drive) {
@@ -998,7 +998,7 @@ function removeSet(exName, idx) {
 function removeExercise(name) { state.workout.exercises = state.workout.exercises.filter(e => e.name !== name); render(); }
 function finishWorkout() {
   document.querySelectorAll('.set-input').forEach(inp => { const e = state.workout.exercises.find(e => e.name === inp.dataset.ex); if (e && e.sets[+inp.dataset.idx]) e.sets[+inp.dataset.idx][inp.dataset.field] = inp.value; });
-  if (!state.workout.exercises.length) { showToast('Noch keine Ejercicios! 😅'); return; }
+  if (!state.workout.exercises.length) { showToast('¡Sin ejercicios todavía! 😅'); return; }
   const h = { ...state.data.history };
   state.workout.exercises.forEach(ex => {
     const done = ex.sets.filter(s => s.done || (s.reps && s.weight)); if (!done.length) return;
@@ -1040,7 +1040,7 @@ function importData(file) {
 }
 function createAndAddExercise() {
   const inp = document.getElementById('newExWorkoutInput'); const name = inp?.value.trim(); if (!name) return;
-  if (allExercises().includes(name)) { showToast('Gibt es schon!'); return; }
+  if (allExercises().includes(name)) { showToast('¡Ya existe!'); return; }
   state.data.customExercises = [...(state.data.customExercises || []), name]; saveLocal(); addExerciseToWorkout(name);
 }
 
@@ -1169,7 +1169,7 @@ function renderHome() {
     <div class="section-block">
       <div class="section-title">⏱ Timer de descanso</div>
       <div class="rest-settings">
-        <span>Pause zwischen Seriesn</span>
+        <span>Pausa entre series</span>
         <button class="rest-btn" onclick="if(state.restDuration>10){state.restDuration-=5;render()}">−</button>
         <div class="rest-val">${state.restDuration}s</div>
         <button class="rest-btn" onclick="if(state.restDuration<300){state.restDuration+=5;render()}">+</button>
@@ -1264,7 +1264,7 @@ function renderHistory() {
       const entries = [...state.data.history[exName]].reverse();
       const rows = entries.map((entry, ri) => {
         const realIdx = state.data.history[exName].length - 1 - ri;
-        const d = new Date(entry.date).toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+        const d = new Date(entry.date).toLocaleDateString('es-AR', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
         const chips = entry.sets.map(s => `<span class="history-chip">${s.reps} × ${s.weight} kg</span>`).join('');
         return `<div class="history-entry"><div class="history-header"><div class="history-date">${d}</div><button class="btn-icon" onclick="deleteHistoryEntry('${exName.replace(/'/g, "\\'")}',${realIdx})">🗑</button></div><div class="history-sets">${chips}</div></div>`;
       }).join('');
@@ -1275,11 +1275,11 @@ function renderHistory() {
 }
 
 function renderWorkout() {
-  const dateStr = new Date(state.workout.date).toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long' });
+  const dateStr = new Date(state.workout.date).toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit', month: 'long' });
   const cards = state.workout.exercises.map(ex => {
     const last = getLastSession(ex.name);
     const lastHTML = last
-      ? `<div class="last-session"><div class="last-session-label">⏱ Última vez · ${new Date(last.date).toLocaleDateString('de-DE', { day: '2-digit', month: 'short' })}</div><div class="last-sets">${last.sets.map((s, i) => `<span class="last-set-chip">S${i + 1}: ${s.reps}×${s.weight}kg</span>`).join('')}</div></div>`
+      ? `<div class="last-session"><div class="last-session-label">⏱ Última vez · ${new Date(last.date).toLocaleDateString('es-AR', { day: '2-digit', month: 'short' })}</div><div class="last-sets">${last.sets.map((s, i) => `<span class="last-set-chip">S${i + 1}: ${s.reps}×${s.weight}kg</span>`).join('')}</div></div>`
       : `<div class="no-history">¡Primera vez – a tope! 🔥</div>`;
     const setsHTML = ex.sets.map((s, idx) => {
       const uid = (ex.name + '-' + idx).replace(/[^a-zA-Z0-9]/g, '_');
@@ -1298,13 +1298,13 @@ function renderWorkout() {
       <button class="btn-ghost" onclick="addSet('${ex.name.replace(/'/g, "\\'")}')">+ Agregar serie</button>
       </div></div>`;
   }).join('');
-  const empty = state.workout.exercises.length === 0 ? `<div class="empty-state">Keine Ejercicios.<br/>¡Agregá uno! 👇</div>` : '';
+  const empty = state.workout.exercises.length === 0 ? `<div class="empty-state">¡Sin ejercicios aún!<br/>¡Agregá uno! 👇</div>` : '';
   const modalHTML = state.showAddEx ? (() => {
     const fl = state.addExFilter.toLowerCase();
     const items = allExercises().filter(e => e.toLowerCase().includes(fl)).map(e => {
       const added = state.workout.exercises.find(ex => ex.name === e);
       const custom = (state.data.customExercises || []).includes(e);
-      return `<li onclick="addExerciseToWorkout('${e.replace(/'/g, "\\'")}')"><span>${e}${custom ? ' <span class="ex-tag">eigene</span>' : ''}</span>${added ? '<span class="ex-done">✓</span>' : ''}</li>`;
+      return `<li onclick="addExerciseToWorkout('${e.replace(/'/g, "\\'")}')"><span>${e}${custom ? ' <span class="ex-tag">propia</span>' : ''}</span>${added ? '<span class="ex-done">✓</span>' : ''}</li>`;
     }).join('');
     return `<div class="modal-overlay" onclick="if(event.target===this)setState({showAddEx:false,addExFilter:''})">
       <div class="modal"><div class="modal-title">💪 Elegir ejercicio</div>
@@ -1341,7 +1341,7 @@ function renderModalList() {
   const items = allExercises().filter(e => e.toLowerCase().includes(fl)).map(e => {
     const added = state.workout.exercises.find(ex => ex.name === e);
     const custom = (state.data.customExercises || []).includes(e);
-    return `<li onclick="addExerciseToWorkout('${e.replace(/'/g, "\\'")}')"><span>${e}${custom ? ' <span class="ex-tag">eigene</span>' : ''}</span>${added ? '<span class="ex-done">✓</span>' : ''}</li>`;
+    return `<li onclick="addExerciseToWorkout('${e.replace(/'/g, "\\'")}')"><span>${e}${custom ? ' <span class="ex-tag">propia</span>' : ''}</span>${added ? '<span class="ex-done">✓</span>' : ''}</li>`;
   }).join('');
   const list = document.getElementById('exModalList'); if (list) list.innerHTML = items;
 }
