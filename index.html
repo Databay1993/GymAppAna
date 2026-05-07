@@ -688,24 +688,6 @@ function getArgentinaDay() {
   return ARGENTINA_DAYS[getTodayKey()] || null;
 }
 
-  if (day.type === 'germany_wc2014') {
-    return `
-      :root { --pink: #FFCE00; --pink2: #f5b800; --bg: #0a0a0a; --surface: #151515; --surface2: #1e1e1e; --border: #333; --text: #f5f5f5; }
-      .header { border-bottom: 2px solid #FFCE00 !important; background: linear-gradient(90deg,#111,#1a0000,#111) !important; }
-      .logo { background: linear-gradient(90deg,#000,#CC0000,#FFCE00) !important; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family:'Bebas Neue',sans-serif !important; }
-      .btn-primary { background: linear-gradient(90deg,#CC0000,#FFCE00) !important; color: #000 !important; box-shadow: 0 4px 20px rgba(255,206,0,.4) !important; }
-      .stat-num,.pr-chip-val,.vol-bar-label span:last-child,.rest-val { color: #FFCE00 !important; }
-      .check-btn.done { background: #FFCE00 !important; border-color: #FFCE00 !important; color: #000 !important; }
-      .hero-meme { border-color: #FFCE00 !important; box-shadow: 0 0 40px rgba(255,206,0,.6) !important; background: #111 !important; padding: 0 !important; overflow: hidden !important; }
-      .hero-title span { color: #FFCE00 !important; }
-      .quote-bar { background: linear-gradient(90deg,#000,#CC0000,#FFCE00) !important; }
-      .timer-progress { stroke: #FFCE00 !important; }
-      .vol-bar-fill { background: linear-gradient(90deg,#CC0000,#FFCE00) !important; }
-      .history-ex-title { color: #FFCE00 !important; }
-      .toast { background: #FFCE00 !important; color: #000 !important; }
-      .freq-chip.active { border-color:#FFCE00!important; color:#FFCE00!important; background:rgba(255,206,0,.1)!important; }
-    `;
-  }
 function isArgentinaDay() {
   return !!getArgentinaDay();
 }
@@ -767,6 +749,24 @@ function getArgentinaThemeStyle(day) {
       .hero-meme { border-color: #75aadb !important; box-shadow: 0 0 40px rgba(116,170,219,.4) !important; }
       .hero-title span { color: #75aadb !important; }
       .toast { background: #75aadb !important; }
+    `;
+  }
+  if (day.type === 'germany_wc2014') {
+    return `
+      :root { --pink: #FFCE00; --pink2: #f5b800; --bg: #0a0a0a; --surface: #151515; --surface2: #1e1e1e; --border: #333; --text: #f5f5f5; }
+      .header { border-bottom: 2px solid #FFCE00 !important; background: linear-gradient(90deg,#111,#1a0000,#111) !important; }
+      .logo { background: linear-gradient(90deg,#000,#CC0000,#FFCE00) !important; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family:'Bebas Neue',sans-serif !important; }
+      .btn-primary { background: linear-gradient(90deg,#CC0000,#FFCE00) !important; color: #000 !important; box-shadow: 0 4px 20px rgba(255,206,0,.4) !important; }
+      .stat-num,.pr-chip-val,.vol-bar-label span:last-child,.rest-val { color: #FFCE00 !important; }
+      .check-btn.done { background: #FFCE00 !important; border-color: #FFCE00 !important; color: #000 !important; }
+      .hero-meme { border-color: #FFCE00 !important; box-shadow: 0 0 40px rgba(255,206,0,.6) !important; background: #111 !important; padding: 0 !important; overflow: hidden !important; }
+      .hero-title span { color: #FFCE00 !important; }
+      .quote-bar { background: linear-gradient(90deg,#000,#CC0000,#FFCE00) !important; }
+      .timer-progress { stroke: #FFCE00 !important; }
+      .vol-bar-fill { background: linear-gradient(90deg,#CC0000,#FFCE00) !important; }
+      .history-ex-title { color: #FFCE00 !important; }
+      .toast { background: #FFCE00 !important; color: #000 !important; }
+      .freq-chip.active { border-color:#FFCE00!important; color:#FFCE00!important; background:rgba(255,206,0,.1)!important; }
     `;
   }
   return '';
