@@ -997,6 +997,7 @@ function removeSet(exName, idx) {
 }
 function removeExercise(name) { state.workout.exercises = state.workout.exercises.filter(e => e.name !== name); render(); }
 function finishWorkout() {
+  cancelTimer();
   document.querySelectorAll('.set-input').forEach(inp => { const e = state.workout.exercises.find(e => e.name === inp.dataset.ex); if (e && e.sets[+inp.dataset.idx]) e.sets[+inp.dataset.idx][inp.dataset.field] = inp.value; });
   if (!state.workout.exercises.length) { showToast('¡Sin ejercicios todavía! 😅'); return; }
   const h = { ...state.data.history };
