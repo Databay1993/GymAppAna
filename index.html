@@ -1078,27 +1078,29 @@ function render() {
   if (state.toast) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = state.toast; app.appendChild(t); }
   if (fid) { const el = document.getElementById(fid); if (el) { el.focus(); try { el.setSelectionRange(ss, se); } catch {} } }
   // Argentina day splash on open
-  if (state.argentinaSplash) {
+  if (state.argentinaSplash && !document.getElementById('overlay-splash')) {
     const splash = document.createElement('div');
+    splash.id = 'overlay-splash';
     splash.innerHTML = argentinaCelebrationHTML(state.argentinaSplash.celebration, false);
-    app.appendChild(splash.firstElementChild);
+    document.body.appendChild(splash.firstElementChild);
     return;
   }
   // Argentina celebration after workout finish
-  if (state.argentinaCelebration) {
+  if (state.argentinaCelebration && !document.getElementById('overlay-arg')) {
     const cel = document.createElement('div');
+    cel.id = 'overlay-arg';
     cel.innerHTML = argentinaCelebrationHTML(state.argentinaCelebration, true);
-    app.appendChild(cel.firstElementChild);
+    document.body.appendChild(cel.firstElementChild);
     return;
   }
   // Normal workout celebration
-  if (state.celebration) {
-    const cel = document.createElement('div'); cel.className = 'celebration-overlay';
+  if (state.celebration && !document.getElementById('overlay-cel')) {
+    const cel = document.createElement('div'); cel.className = 'celebration-overlay'; cel.id = 'overlay-cel';
     cel.innerHTML = `<div class="celebration-meme">${state.celebration.emoji}</div>
       <div class="celebration-text">${state.celebration.text}</div>
       <div class="celebration-sub">${state.celebration.sub}</div>
-      <button class="celebration-btn" onclick="state.celebration=null;render()">CONTINUAR 💪</button>`;
-    app.appendChild(cel);
+      <button class="celebration-btn" onclick="state.celebration=null;document.getElementById('overlay-cel')?.remove();render()">CONTINUAR 💪</button>`;
+    document.body.appendChild(cel);
   }
 }
 
@@ -1385,7 +1387,7 @@ function argentinaCelebrationHTML(cel, isWorkoutFinish) {
       <div style="color:#fff;font-size:14px;margin-top:6px;position:relative;z-index:1">${cel.subtitle}</div>
       <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 18px;margin-top:18px;font-size:13px;color:#ccc;line-height:1.6;font-style:italic;max-width:320px;position:relative;z-index:1">${cel.quote}</div>
       <div style="display:flex;gap:12px;margin-top:28px;position:relative;z-index:1">
-        <button onclick="${isWorkoutFinish ? 'state.celebration=null;state.argentinaCelebration=null;render()' : 'state.argentinaSplash=null;render()'}" style="background:${cel.color};color:#000;border:none;padding:13px 32px;border-radius:8px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;cursor:pointer">${btnLabel}</button>
+        <button onclick="${isWorkoutFinish ? "state.celebration=null;state.argentinaCelebration=null;document.getElementById('overlay-arg')?.remove();render()" : "state.argentinaSplash=null;document.getElementById('overlay-splash')?.remove();render()"}" style="background:${cel.color};color:#000;border:none;padding:13px 32px;border-radius:8px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;cursor:pointer">${btnLabel}</button>
       </div>
     </div>`;
 }
